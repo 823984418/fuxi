@@ -33,7 +33,7 @@ public class WeakContext<T extends Node> extends Context<T> implements Iterable<
         super(type, input);
         int l = input.readInt();
         Class<? extends T>[] types = new Class[l];
-        for(int i = 0;i < l;i++) {
+        for (int i = 0; i < l; i++) {
             types[i] = load(input.readUTF());
         }
         int len = input.readInt() + 1;
@@ -83,10 +83,12 @@ public class WeakContext<T extends Node> extends Context<T> implements Iterable<
         }
     }
 
-    public int toArray(Node[] array) {
+    @Override
+    public int toArrayAndLoadId(Node[] array) {
         int i = 0;
         for (Node n : this) {
             array[i++] = n;
+            n.setId(i);
         }
         return i;
     }
@@ -95,32 +97,26 @@ public class WeakContext<T extends Node> extends Context<T> implements Iterable<
     public void save(DataOutput output) throws IOException {
         super.save(output);
         applyAdd();
-        Node[] array =  new Node[nodes.getRefNodeCount() + 1];
-        toArray(array);
+        Node[] array = new Node[nodes.getRefNodeCount()];
+        int l = toArrayAndLoadId(array);
         Set<Class<? extends T>> types = new HashSet<>();
-        int id = 0;
-        for (Node n : array) {
-            if (n != null) {
-                n.setID(++id);
-                Class<? extends T> type = (Class<? extends T>) n.getClass();
-                types.add(type);
-            }
+        for (int n = 0; n < l; n++) {
+            types.add((Class<? extends T>) array[n].getClass());
         }
-        
+
         int i = 0;
-        Map<Class<? extends T>,Integer> map = new HashMap<>();
+        Map<Class<? extends T>, Integer> map = new HashMap<>();
         output.writeInt(types.size());
-        for(Class<? extends T> t : types) {
+        for (Class<? extends T> t : types) {
             map.put(t, i++);
             output.writeUTF(t.getName());
         }
-        
-        output.writeInt(id);
-        for (Node n : array) {
-            if (n != null) {
-                output.writeInt(map.get((Class<? extends T>) n.getClass()));
-                n.save(output);
-            }
+
+        output.writeInt(l);
+        for (int n = 0; n < l; n++) {
+            Node nn = array[n];
+            output.writeInt(map.get((Class<? extends T>) nn.getClass()));
+            nn.save(output);
         }
     }
 

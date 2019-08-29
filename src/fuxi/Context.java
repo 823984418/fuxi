@@ -28,7 +28,7 @@ public class Context<T extends Node> {
             throw new RuntimeException();
         }
     }
-    
+
     private final Class<T> typeCheck;
 
     public final Class<T> getTypeCheck() {
@@ -53,14 +53,26 @@ public class Context<T extends Node> {
         throw new RuntimeException();
     }
 
-    public void loadID() {
-
+    /**
+     * 将结点输出为数组并分配id 注意分配的id是从1开始的 即array[node.getId() - 1] == node
+     *
+     * @param array 输出
+     * @return 实际结点数
+     */
+    public int toArrayAndLoadId(Node[] array) {
+        return 0;
     }
 
     public void updata() {
 
     }
 
+    /**
+     * 尝试序列化这个上下文 此过程还可能会调用{@link  #toArrayAndLoadId(Node[])}(由子类实现)
+     *
+     * @param output 输出流
+     * @throws IOException 输出流异常
+     */
     public void save(DataOutput output) throws IOException {
         output.writeUTF(typeCheck.getName());
     }

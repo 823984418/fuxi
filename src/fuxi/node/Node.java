@@ -29,14 +29,14 @@ public interface Node {
      *
      * @param id id值
      */
-    public void setID(int id);
+    public void setId(int id);
 
     /**
      * 获取此结点的id值 通常此值既结点是在{@link load(Node[],DataInput)}的pool中的位置
      *
      * @return id值
      */
-    public int getID();
+    public int getId();
 
     /**
      * 序列化此节点

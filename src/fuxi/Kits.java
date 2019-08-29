@@ -16,6 +16,6 @@ public class Kits {
         if(node == null) {
             return 0;
         }
-        return node.getID();
+        return node.getId();
     }
 }
