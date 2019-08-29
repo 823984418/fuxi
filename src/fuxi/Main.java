@@ -6,13 +6,11 @@
 package fuxi;
 
 import fuxi.node.InputLayerNode;
-import fuxi.node.UnitLayerNode;
-import fuxi.node.AbstractLayerNode;
+import fuxi.node.LayerNode;
 import fuxi.node.Node;
+import fuxi.node.UnitLayerNode;
 import fuxi.tools.MnistImageFile;
 import fuxi.tools.MnistLableFile;
-import java.util.Arrays;
-import javax.swing.JFrame;
 
 /**
  *
@@ -23,6 +21,17 @@ public class Main {
     public static void main(String[] args) throws Exception {
         MnistImageFile m = MnistImageFile.load();
         MnistLableFile l = MnistLableFile.load();
-        
+        WeakContext<Node> c = new WeakContext<>(Node.class);
+        LayerNode ln = new InputLayerNode(10) {
+            @Override
+            protected void input(Context context, float[] value) {
+                
+            }
+        };
+        c.addNode(ln);
+        ln = new UnitLayerNode(ln, 10);
+        c.addNode(ln);
+        c.applyAdd();
+        c.printDebug(System.out);
     }
 }

@@ -5,6 +5,8 @@
  */
 package fuxi.node;
 
+import java.io.PrintStream;
+
 /**
  *
  * @author 82398
@@ -25,5 +27,19 @@ public abstract class AbstractLayerNode extends AbstractNode implements LayerNod
     public int size() {
         return data.length;
     }
-    
+
+    @Override
+    public void printDebug(PrintStream print) {
+        super.printDebug(print);
+        print.print("\tvalue[");
+        int l = size();
+        print.print(l);
+        print.print("]:>>");
+        for(int i = 0;i < l;i++) {
+            print.print("|");
+            print.print(value(i));
+        }
+        print.println("|");
+    }
+
 }

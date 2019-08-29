@@ -8,6 +8,7 @@ package fuxi.node;
 import fuxi.Context;
 import java.io.DataInput;
 import java.io.DataOutput;
+import java.io.PrintStream;
 
 /**
  * 神经网络结点 任何一个实现类都至少有一个公有无参构造器一用于反序列化
@@ -52,5 +53,6 @@ public interface Node {
      */
     public void updata(Context<? extends Node> context);
 
+    public void printDebug(PrintStream print);
 
 }

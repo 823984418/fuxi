@@ -6,8 +6,10 @@
 package fuxi.node;
 
 import fuxi.Context;
+import fuxi.Kits;
 import java.io.DataInput;
 import java.io.DataOutput;
+import java.io.PrintStream;
 
 /**
  *
@@ -54,6 +56,10 @@ public abstract class AbstractNode implements Node {
         float a = (float) Math.tanh(x);
         return 1 - a*a;
     }
-    
-    
+
+    @Override
+    public void printDebug(PrintStream print) {
+        print.println(Kits.asNode(this));
+    }
+
 }

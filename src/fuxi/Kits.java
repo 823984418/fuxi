@@ -18,4 +18,13 @@ public class Kits {
         }
         return node.getId();
     }
+    public static String getClassName(Node node) {
+        if(node == null) {
+            return "null";
+        }
+        return node.getClass().getName();
+    }
+    public static String asNode(Node node) {
+        return getID(node) + ":" + getClassName(node);
+    }
 }

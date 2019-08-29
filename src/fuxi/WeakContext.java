@@ -9,6 +9,7 @@ import fuxi.node.Node;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -112,12 +113,20 @@ public class WeakContext<T extends Node> extends Context<T> implements Iterable<
 
     @Override
     public int toArrayAndLoadId(Node[] array) {
-        int i = 0;
-        for (Node n : this) {
-            array[i++] = n;
-            n.setId(i);
+        if (array == null) {
+            int i = 0;
+            for (T n : this) {
+                n.setId(++i);
+            }
+            return i;
+        } else {
+            int i = 0;
+            for (T n : this) {
+                array[i++] = n;
+                n.setId(i);
+            }
+            return i;
         }
-        return i;
     }
 
     /**
@@ -151,6 +160,25 @@ public class WeakContext<T extends Node> extends Context<T> implements Iterable<
             Node nn = array[n];
             output.writeInt(map.get((Class<? extends T>) nn.getClass()));
             nn.save(output);
+        }
+    }
+
+    @Override
+    public void printDebug(PrintStream print) {
+        int i = 0;
+        for (T n : adds) {
+            n.setId(--i);
+        }
+        super.printDebug(print);
+        print.println(Kits.asNode(null));
+        print.println("nodes:");
+        for (T n : nodes) {
+            n.printDebug(print);
+        }
+        print.println();
+        print.println("adds:");
+        for (T n : adds) {
+            n.printDebug(print);
         }
     }
 

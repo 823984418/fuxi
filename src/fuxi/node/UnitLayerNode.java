@@ -6,7 +6,9 @@
 package fuxi.node;
 
 import fuxi.Context;
+import fuxi.Kits;
 import java.io.DataInput;
+import java.io.PrintStream;
 
 /**
  *
@@ -82,9 +84,17 @@ public class UnitLayerNode extends AbstractLayerNode implements LayerNode, BackN
             }
         }
     }
+    
     @Override
     public void trend(int i, float d) {
         trends[i] += d;
+    }
+
+    @Override
+    public void printDebug(PrintStream print) {
+        super.printDebug(print);
+        print.print("\tfromNode:>>");
+        print.print(Kits.asNode(fromNode));
     }
 
 }

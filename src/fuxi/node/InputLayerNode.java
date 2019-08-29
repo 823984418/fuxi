@@ -6,8 +6,6 @@
 package fuxi.node;
 
 import fuxi.Context;
-import fuxi.node.LayerNode;
-import fuxi.node.AbstractLayerNode;
 
 /**
  *

@@ -9,6 +9,7 @@ import fuxi.node.Node;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
+import java.io.PrintStream;
 
 /**
  * 一个上下文 此类不直接使用，由子类继承
@@ -107,6 +108,19 @@ public class Context<T extends Node> {
      */
     public void save(DataOutput output) throws IOException {
         output.writeUTF(typeCheck.getName());
+    }
+
+    /**
+     * 输出此上下文调试信息 会调用{@link  #toArrayAndLoadId(Node[])}以帮助结点表述
+     *
+     * @param print 输出流
+     */
+    public void printDebug(PrintStream print) {
+        print.print(getClass().getName());
+        print.print("[");
+        print.print(typeCheck.getName());
+        print.println("]:");
+        toArrayAndLoadId(null);
     }
 
 }
