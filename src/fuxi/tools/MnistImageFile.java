@@ -21,8 +21,8 @@ import javax.swing.JLabel;
  */
 public class MnistImageFile extends IdxFile<byte[]> {
     public static MnistImageFile load() {
-        try {
-            return new MnistImageFile(new DataInputStream(new FileInputStream("D:\\code\\MNIST\\train_input.idx")));
+        try(DataInputStream input = new DataInputStream(new FileInputStream("D:\\code\\MNIST\\train_input.idx"))) {
+            return new MnistImageFile(input);
         } catch (IOException ex) {
             return null;
         }

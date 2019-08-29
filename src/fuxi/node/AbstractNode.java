@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fuxi;
+package fuxi.node;
 
+import fuxi.Context;
 import java.io.DataInput;
 import java.io.DataOutput;
 

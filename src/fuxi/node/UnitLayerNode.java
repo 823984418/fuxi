@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fuxi;
+package fuxi.node;
 
+import fuxi.Context;
 import java.io.DataInput;
 
 /**
@@ -12,6 +13,11 @@ import java.io.DataInput;
  * @author 82398
  */
 public class UnitLayerNode extends AbstractLayerNode implements LayerNode {
+    private static void random(float[] array) {
+        for(int i = 0,l = array.length;i < l;i++) {
+            array[i] = (float) Math.random();
+        }
+    }
 
     public UnitLayerNode() {
 
@@ -22,12 +28,19 @@ public class UnitLayerNode extends AbstractLayerNode implements LayerNode {
         fromNode = from;
         weight = new float[from.size() * size];
         add = new float[size];
+        trends = new float[size];
+        random();
     }
 
     private LayerNode fromNode;
     private float[] weight;
     private float[] add;
     private transient float[] trends;
+    
+    public void random() {
+        random(weight);
+        random(add);
+    }
 
     @Override
     public void load(Node[] pool, DataInput input) {
@@ -38,7 +51,7 @@ public class UnitLayerNode extends AbstractLayerNode implements LayerNode {
     @Override
     public void updata(Context context) {
         super.updata(context);
-        int l = data.length;
+        int l = size();
         for (int i = 0; i < l; i++) {
             data[i] = activation(sum(i));
         }
