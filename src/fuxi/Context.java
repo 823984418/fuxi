@@ -50,7 +50,7 @@ public class Context<T extends Node> {
             }
         } catch (ClassNotFoundException ex) {
         }
-        return null;
+        throw new RuntimeException();
     }
 
     public void loadID() {
