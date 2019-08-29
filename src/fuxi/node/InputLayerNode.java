@@ -30,10 +30,5 @@ public abstract class InputLayerNode extends AbstractLayerNode implements LayerN
     }
 
     protected abstract void input(Context context, float[] value);
-
-    @Override
-    public void trend(int i, float d) {
-        
-    }
     
 }

@@ -12,33 +12,35 @@ import java.io.IOException;
 
 
 /**
- *
+ * 一个上下文
  * @author 82398
+ * @param <T> 此上下文限制的结点类型
  */
 public class Context<T extends Node> {
     public Context(Class<T> type) {
         typeCheck = type;
-        updataCount = -1;
     }
     public Context(Class<T> type, DataInput input) throws IOException {
         typeCheck = type;
-        updataCount = input.readInt();
+        if(!type.getName().equals(input.readUTF())){
+            throw new RuntimeException();
+        }
     }
     private final Class<T> typeCheck;
-    public Class<T> getTypeCheck() {
+    public final Class<T> getTypeCheck() {
         return typeCheck;
     }
-    public T checkType(Node node) {
+    public final T checkType(Node node) {
         if(!typeCheck.isInstance(node)) {
             throw new RuntimeException();
         }
         return (T) node;
     }
-    public Class<? extends Node> load(String typeName) {
+    public Class<? extends T> load(String typeName) {
         try {
             Class<?> type = Class.forName(typeName);
-            if(Node.class.isAssignableFrom(type)){
-                return (Class<? extends Node>) type;
+            if(typeCheck.isAssignableFrom(type)){
+                return (Class<? extends T>) type;
             }
         } catch (ClassNotFoundException ex) {
         }
@@ -48,10 +50,9 @@ public class Context<T extends Node> {
         
     }
     public void save(DataOutput output) throws IOException {
-        output.writeInt(updataCount);
+        output.writeUTF(typeCheck.getName());
     }
-    public int updataCount;
     public void updata() {
-        updataCount++;
+        
     }
 }

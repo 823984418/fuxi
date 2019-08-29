@@ -21,14 +21,6 @@ public interface LayerNode extends Node {
     public float value(int i);
 
     /**
-     * 登记反向传播数据
-     *
-     * @param i 结点
-     * @param d 期望变化
-     */
-    public void trend(int i, float d);
-
-    /**
      * 获取此层的大小
      *
      * @return 此层结点的结点数

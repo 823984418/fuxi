@@ -11,13 +11,17 @@ import java.io.DataOutput;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  *
  * @author 82398
+ * @param <T> 限制的结点类型
  */
 public class WeakContext<T extends Node> extends Context<T> implements Iterable<T> {
 
@@ -27,19 +31,16 @@ public class WeakContext<T extends Node> extends Context<T> implements Iterable<
 
     public WeakContext(Class<T> type, DataInput input) throws IOException {
         super(type, input);
-        List<Class<? extends Node>> types = new ArrayList<>();
-        while (true) {
-            String str = input.readUTF();
-            if ("void".equals(str)) {
-                break;
-            }
-            types.add(load(str));
+        int l = input.readInt();
+        Class<? extends T>[] types = new Class[l];
+        for(int i = 0;i < l;i++) {
+            types[i] = load(input.readUTF());
         }
         int len = input.readInt() + 1;
         Node[] pool = new Node[len];
         for (int i = 1; i < len; i++) {
             try {
-                pool[i++] = types.get(input.readInt()).getConstructor().newInstance();
+                pool[i++] = types[input.readInt()].getConstructor().newInstance();
             } catch (ReflectiveOperationException ex) {
                 throw new RuntimeException(ex);
             }
@@ -82,7 +83,7 @@ public class WeakContext<T extends Node> extends Context<T> implements Iterable<
         }
     }
 
-    public int toPool(Node[] array) {
+    public int toArray(Node[] array) {
         int i = 0;
         for (Node n : this) {
             array[i++] = n;
@@ -94,27 +95,30 @@ public class WeakContext<T extends Node> extends Context<T> implements Iterable<
     public void save(DataOutput output) throws IOException {
         super.save(output);
         applyAdd();
-        Node[] pool = new Node[nodes.getRefNodeCount() + 1];
-        toPool(pool);
-        Map<Class<? extends Node>, Integer> types = new HashMap<>();
-        int id = 1;
-        for (Node n : pool) {
+        Node[] array =  new Node[nodes.getRefNodeCount() + 1];
+        toArray(array);
+        Set<Class<? extends T>> types = new HashSet<>();
+        int id = 0;
+        for (Node n : array) {
             if (n != null) {
-                Class<? extends Node> type = n.getClass();
-                Integer i = types.get(type);
-                if (i == null) {
-                    i = types.size();
-                    types.put(type, i);
-                    output.writeUTF(type.getName());
-                }
-                n.setID(id++);
+                n.setID(++id);
+                Class<? extends T> type = (Class<? extends T>) n.getClass();
+                types.add(type);
             }
         }
-        output.writeUTF("void");
-        output.writeInt(id - 1);
-        for (Node n : pool) {
+        
+        int i = 0;
+        Map<Class<? extends T>,Integer> map = new HashMap<>();
+        output.writeInt(types.size());
+        for(Class<? extends T> t : types) {
+            map.put(t, i++);
+            output.writeUTF(t.getName());
+        }
+        
+        output.writeInt(id);
+        for (Node n : array) {
             if (n != null) {
-                output.writeInt(types.get(n.getClass()));
+                output.writeInt(map.get((Class<? extends T>) n.getClass()));
                 n.save(output);
             }
         }

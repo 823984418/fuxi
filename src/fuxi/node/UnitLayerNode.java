@@ -78,7 +78,7 @@ public class UnitLayerNode extends AbstractLayerNode implements LayerNode, BackN
             ds /= ws;
             for(int j = 0,s = fromNode.size();j < s;j++) {
                 weight[i*s + j] += 0.2 * weight[i*s + j]*ds;
-                fromNode.trend(j, ds * weight[i*s + j]);
+                //fromNode.trend(j, ds * weight[i*s + j]);
             }
         }
     }

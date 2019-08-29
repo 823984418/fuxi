@@ -3,18 +3,19 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fuxi.node;
+package fuxi;
 
-import fuxi.Context;
+import fuxi.node.Node;
 
 /**
  *
  * @author 82398
  */
-public interface BackNode extends Node {
-    
-    public void back(Context<? extends BackNode> context);
-    
-    public void trend(int i, float d);
-    
+public class Kits {
+    public static int getID(Node node) {
+        if(node == null) {
+            return 0;
+        }
+        return node.getID();
+    }
 }
