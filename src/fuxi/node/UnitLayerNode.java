@@ -12,7 +12,7 @@ import java.io.DataInput;
  *
  * @author 82398
  */
-public class UnitLayerNode extends AbstractLayerNode implements LayerNode {
+public class UnitLayerNode extends AbstractLayerNode implements LayerNode, BackNode {
     private static void random(float[] array) {
         for(int i = 0,l = array.length;i < l;i++) {
             array[i] = (float) Math.random();
@@ -49,7 +49,7 @@ public class UnitLayerNode extends AbstractLayerNode implements LayerNode {
     }
 
     @Override
-    public void updata(Context context) {
+    public void updata(Context<? extends Node> context) {
         super.updata(context);
         int l = size();
         for (int i = 0; i < l; i++) {
@@ -66,8 +66,7 @@ public class UnitLayerNode extends AbstractLayerNode implements LayerNode {
     }
 
     @Override
-    public void back(Context context) {
-        super.back(context);
+    public void back(Context<? extends BackNode> context) {
         int l = data.length;
         for(int i = 0;i < l;i++) {
             float dx = sum(i);

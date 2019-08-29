@@ -19,13 +19,14 @@ import java.util.Map;
  *
  * @author 82398
  */
-public class WeakContext extends Context implements Iterable<Node> {
+public class WeakContext<T extends Node> extends Context<T> implements Iterable<T> {
 
-    public WeakContext() {
-
+    public WeakContext(Class<T> type) {
+        super(type);
     }
 
-    public WeakContext(DataInput input) throws IOException {
+    public WeakContext(Class<T> type, DataInput input) throws IOException {
+        super(type, input);
         List<Class<? extends Node>> types = new ArrayList<>();
         while (true) {
             String str = input.readUTF();
@@ -46,16 +47,16 @@ public class WeakContext extends Context implements Iterable<Node> {
         for (Node n : pool) {
             if (n != null) {
                 n.load(pool, input);
-                nodes.add(n);
+                nodes.add(checkType(n));
             }
         }
     }
 
-    private final WeakLinks<Node> nodes = new WeakLinks<>();
-    private final WeakLinks<Node> adds = new WeakLinks<>();
+    private final WeakLinks<T> nodes = new WeakLinks<>();
+    private final WeakLinks<T> adds = new WeakLinks<>();
 
     public void addNode(Node node) {
-        adds.add(node);
+        adds.add(checkType(node));
     }
 
     public void applyAdd() {
@@ -63,11 +64,11 @@ public class WeakContext extends Context implements Iterable<Node> {
     }
 
     @Override
-    public Iterator<Node> iterator() {
+    public Iterator<T> iterator() {
         return nodes.iterator();
     }
 
-    public Iterator<Node> contraryIterator() {
+    public Iterator<T> contraryIterator() {
         return nodes.contraryIterator();
     }
 
@@ -77,16 +78,6 @@ public class WeakContext extends Context implements Iterable<Node> {
         for (Node n : this) {
             if (n != null) {
                 n.updata(this);
-            }
-        }
-    }
-
-    @Override
-    public void back() {
-        super.back();
-        for (Node n : this) {
-            if (n != null) {
-                n.back(this);
             }
         }
     }

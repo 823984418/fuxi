@@ -15,12 +15,24 @@ import java.io.IOException;
  *
  * @author 82398
  */
-public class Context {
-    public Context() {
-        updataCount = 0;
+public class Context<T extends Node> {
+    public Context(Class<T> type) {
+        typeCheck = type;
+        updataCount = -1;
     }
-    public Context(DataInput input) throws IOException {
+    public Context(Class<T> type, DataInput input) throws IOException {
+        typeCheck = type;
         updataCount = input.readInt();
+    }
+    private final Class<T> typeCheck;
+    public Class<T> getTypeCheck() {
+        return typeCheck;
+    }
+    public T checkType(Node node) {
+        if(!typeCheck.isInstance(node)) {
+            throw new RuntimeException();
+        }
+        return (T) node;
     }
     public Class<? extends Node> load(String typeName) {
         try {
@@ -41,8 +53,5 @@ public class Context {
     public int updataCount;
     public void updata() {
         updataCount++;
-    }
-    public void back() {
-        
     }
 }

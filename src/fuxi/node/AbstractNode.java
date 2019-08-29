@@ -42,12 +42,7 @@ public abstract class AbstractNode implements Node {
     }
 
     @Override
-    public void updata(Context context) {
-        
-    }
-
-    @Override
-    public void back(Context context) {
+    public void updata(Context<? extends Node> context) {
         
     }
     

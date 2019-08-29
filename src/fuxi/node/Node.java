@@ -50,13 +50,7 @@ public interface Node {
      *
      * @param context 调用者
      */
-    public void updata(Context context);
+    public void updata(Context<? extends Node> context);
 
-    /**
-     * 反向更新结点内容
-     *
-     * @param context 调用者
-     */
-    public void back(Context context);
 
 }
