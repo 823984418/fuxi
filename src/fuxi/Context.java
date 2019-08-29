@@ -28,6 +28,7 @@ public class Context<T extends Node> {
             throw new RuntimeException();
         }
     }
+    
     private final Class<T> typeCheck;
 
     public final Class<T> getTypeCheck() {
