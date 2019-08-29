@@ -11,17 +11,29 @@ import java.io.DataOutput;
 import java.io.IOException;
 
 /**
- * 一个上下文
+ * 一个上下文 此类不直接使用，由子类继承
  *
  * @author 82398
  * @param <T> 此上下文限制的结点类型
  */
 public class Context<T extends Node> {
 
+    /**
+     * 新建一个上下文 设置类型限制
+     *
+     * @param type 限制类型
+     */
     public Context(Class<T> type) {
         typeCheck = type;
     }
 
+    /**
+     * 反序列化一个上下文 检查类型限制是否相同，不同抛出异常
+     *
+     * @param type 类型限制
+     * @param input 输入流
+     * @throws IOException 输入流异常
+     */
     public Context(Class<T> type, DataInput input) throws IOException {
         typeCheck = type;
         if (!type.getName().equals(input.readUTF())) {
@@ -31,10 +43,21 @@ public class Context<T extends Node> {
 
     private final Class<T> typeCheck;
 
+    /**
+     * 获取类型限制
+     *
+     * @return 限制的类型
+     */
     public final Class<T> getTypeCheck() {
         return typeCheck;
     }
 
+    /**
+     * 对结点进行类型检查 如果不在限制范围内，抛出异常
+     *
+     * @param node 结点
+     * @return 结点
+     */
     public final T checkType(Node node) {
         if (!typeCheck.isInstance(node)) {
             throw new RuntimeException();
@@ -42,6 +65,12 @@ public class Context<T extends Node> {
         return (T) node;
     }
 
+    /**
+     * 试图加载一个结点类 如果没有找到或者不在限制范围内，抛出异常
+     *
+     * @param typeName 名称
+     * @return 加载类
+     */
     public Class<? extends T> load(String typeName) {
         try {
             Class<?> type = Class.forName(typeName);
@@ -63,6 +92,9 @@ public class Context<T extends Node> {
         return 0;
     }
 
+    /**
+     * 尝试更新一次全部结点
+     */
     public void updata() {
 
     }

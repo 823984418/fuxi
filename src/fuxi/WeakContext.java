@@ -9,12 +9,9 @@ import fuxi.node.Node;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -25,10 +22,22 @@ import java.util.Set;
  */
 public class WeakContext<T extends Node> extends Context<T> implements Iterable<T> {
 
+    /**
+     * 创建一个弱引用上下文 根据给定的限制类型
+     *
+     * @param type 限制类型
+     */
     public WeakContext(Class<T> type) {
         super(type);
     }
 
+    /**
+     * 反序列化一个弱引用上下文 检查限制类型
+     *
+     * @param type 限制类型
+     * @param input 输入流
+     * @throws IOException 输入流异常
+     */
     public WeakContext(Class<T> type, DataInput input) throws IOException {
         super(type, input);
         int l = input.readInt();
@@ -56,19 +65,37 @@ public class WeakContext<T extends Node> extends Context<T> implements Iterable<
     private final WeakLinks<T> nodes = new WeakLinks<>();
     private final WeakLinks<T> adds = new WeakLinks<>();
 
+    /**
+     * 预添加一个结点 此节点不会直接被添加 还需要调用{@link applyAdd()}应用添加
+     *
+     * @param node
+     */
     public void addNode(Node node) {
         adds.add(checkType(node));
     }
 
+    /**
+     * 应用添加
+     */
     public void applyAdd() {
         nodes.append(adds);
     }
 
+    /**
+     * 顺序迭代 迭代过程中移除无效引用
+     *
+     * @return 迭代者
+     */
     @Override
     public Iterator<T> iterator() {
         return nodes.iterator();
     }
 
+    /**
+     * 反序迭代 迭代过程中移除无效引用
+     *
+     * @return 迭代者
+     */
     public Iterator<T> contraryIterator() {
         return nodes.contraryIterator();
     }
@@ -93,6 +120,13 @@ public class WeakContext<T extends Node> extends Context<T> implements Iterable<
         return i;
     }
 
+    /**
+     * 序列化此弱引用上下文 此过程会调用{@link applyAdd()}以序列化所有结点
+     * 调用{@link toArrayAndLoadId(Node[])}分配id
+     *
+     * @param output 输出流
+     * @throws IOException 输出流异常
+     */
     @Override
     public void save(DataOutput output) throws IOException {
         super.save(output);
