@@ -68,7 +68,7 @@ public class WeakContext<T extends Node> extends Context<T> implements Iterable<
     /**
      * 预添加一个结点 此节点不会直接被添加 还需要调用{@link applyAdd()}应用添加
      *
-     * @param node
+     * @param node 添加的结点
      */
     public void addNode(Node node) {
         adds.add(checkType(node));
